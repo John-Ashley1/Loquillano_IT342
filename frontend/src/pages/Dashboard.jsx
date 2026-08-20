@@ -8,10 +8,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     const current = getSession();
+
     if (!current) {
       navigate("/login");
       return;
     }
+
     setSession(current);
   }, [navigate]);
 
@@ -28,9 +30,15 @@ export default function Dashboard() {
             <span className="info-label">User ID</span>
             <span className="info-value">{session.id}</span>
           </div>
+
           <div className="info-row">
             <span className="info-label">Username</span>
             <span className="info-value">{session.username}</span>
+          </div>
+
+          <div className="info-row">
+            <span className="info-label">Email</span>
+            <span className="info-value">{session.email}</span>
           </div>
         </div>
       </div>

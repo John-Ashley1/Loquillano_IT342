@@ -4,22 +4,40 @@ import { registerUser } from "../api/authApi";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: "", password: "", confirmPassword: "" });
+
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const [fieldErrors, setFieldErrors] = useState({});
-  const [serverMessage, setServerMessage] = useState(null); // { type: 'success' | 'error', text }
+  const [serverMessage, setServerMessage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
   function validate() {
     const errors = {};
+
     if (!form.username.trim()) {
       errors.username = "Username is required.";
     } else if (form.username.trim().length < 3) {
       errors.username = "Username must be at least 3 characters.";
+    }
+
+    if (!form.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      errors.email = "Please enter a valid email address.";
     }
 
     if (!form.password) {
@@ -35,6 +53,7 @@ export default function Register() {
     }
 
     setFieldErrors(errors);
+
     return Object.keys(errors).length === 0;
   }
 
@@ -45,10 +64,13 @@ export default function Register() {
     if (!validate()) return;
 
     setSubmitting(true);
+
     const result = await registerUser({
       username: form.username.trim(),
+      email: form.email.trim(),
       password: form.password,
     });
+
     setSubmitting(false);
 
     if (result.success) {
@@ -56,10 +78,20 @@ export default function Register() {
         type: "success",
         text: `Account "${result.user.username}" created successfully. Redirecting to login...`,
       });
-      setForm({ username: "", password: "", confirmPassword: "" });
+
+      setForm({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
       setTimeout(() => navigate("/login"), 1500);
     } else {
-      setServerMessage({ type: "error", text: result.message });
+      setServerMessage({
+        type: "error",
+        text: result.message,
+      });
     }
   }
 
@@ -76,8 +108,10 @@ export default function Register() {
         )}
 
         <form onSubmit={handleSubmit} noValidate>
+
           <div className="form-group">
             <label htmlFor="username">Username</label>
+
             <input
               id="username"
               name="username"
@@ -86,11 +120,37 @@ export default function Register() {
               onChange={handleChange}
               autoComplete="username"
             />
-            {fieldErrors.username && <span className="field-error">{fieldErrors.username}</span>}
+
+            {fieldErrors.username && (
+              <span className="field-error">
+                {fieldErrors.username}
+              </span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              autoComplete="email"
+              placeholder="you@example.com"
+            />
+
+            {fieldErrors.email && (
+              <span className="field-error">
+                {fieldErrors.email}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
             <label htmlFor="password">Password</label>
+
             <input
               id="password"
               name="password"
@@ -99,11 +159,19 @@ export default function Register() {
               onChange={handleChange}
               autoComplete="new-password"
             />
-            {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
+
+            {fieldErrors.password && (
+              <span className="field-error">
+                {fieldErrors.password}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm password</label>
+            <label htmlFor="confirmPassword">
+              Confirm password
+            </label>
+
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -112,18 +180,26 @@ export default function Register() {
               onChange={handleChange}
               autoComplete="new-password"
             />
+
             {fieldErrors.confirmPassword && (
-              <span className="field-error">{fieldErrors.confirmPassword}</span>
+              <span className="field-error">
+                {fieldErrors.confirmPassword}
+              </span>
             )}
           </div>
 
-          <button type="submit" className="btn-primary" disabled={submitting}>
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={submitting}
+          >
             {submitting ? "Creating account..." : "Register"}
           </button>
         </form>
 
         <p className="switch-link">
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account?{" "}
+          <Link to="/login">Log in</Link>
         </p>
       </div>
     </div>
