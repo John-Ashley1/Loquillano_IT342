@@ -1,0 +1,8 @@
+package edu.cit.loquillano.activity1.repository;
+
+import edu.cit.loquillano.activity1.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUsername(String username);
+}
