@@ -1,10 +1,13 @@
 package edu.cit.loquillano.activity1.controller;
 
 import edu.cit.loquillano.activity1.model.User;
+import edu.cit.loquillano.activity1.security.JwtUtil;
 import edu.cit.loquillano.activity1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -13,6 +16,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -32,7 +38,12 @@ public class UserController {
                     .body("Invalid username or password");
         }
 
-        return ResponseEntity.ok(user);
+        String token = jwtUtil.generateToken(user.getUsername());
+
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "username", user.getUsername()
+        ));
     }
 
     @GetMapping("/user/{id}")

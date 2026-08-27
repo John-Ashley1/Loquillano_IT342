@@ -1,46 +1,30 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getSession } from "../api/session";
+import { Link, useNavigate } from "react-router-dom";
+import { isAuthenticated, getUsername } from "../api/session";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [session, setSession] = useState(null);
+  const [username, setUsername] = useState(null);
 
   useEffect(() => {
-    const current = getSession();
-
-    if (!current) {
+    if (!isAuthenticated()) {
       navigate("/login");
       return;
     }
-
-    setSession(current);
+    setUsername(getUsername());
   }, [navigate]);
 
-  if (!session) return null;
+  if (!username) return null;
 
   return (
     <div className="page">
       <div className="card">
         <h1>Dashboard</h1>
-        <p className="subtitle">You are logged in.</p>
+        <p className="subtitle">You are logged in as {username}.</p>
 
-        <div className="dashboard-info">
-          <div className="info-row">
-            <span className="info-label">User ID</span>
-            <span className="info-value">{session.id}</span>
-          </div>
-
-          <div className="info-row">
-            <span className="info-label">Username</span>
-            <span className="info-value">{session.username}</span>
-          </div>
-
-          <div className="info-row">
-            <span className="info-label">Email</span>
-            <span className="info-value">{session.email}</span>
-          </div>
-        </div>
+        <Link to="/requests" className="btn-primary" style={{ display: "inline-block", marginTop: "1rem" }}>
+          Go to My Service Requests
+        </Link>
       </div>
     </div>
   );

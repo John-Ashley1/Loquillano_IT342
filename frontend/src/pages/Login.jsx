@@ -37,7 +37,7 @@ export default function Login() {
     setSubmitting(false);
 
     if (result.success) {
-      saveSession(result.user);
+      saveSession(result.token, result.username);
       setServerMessage({ type: "success", text: "Login successful. Redirecting..." });
       setTimeout(() => navigate("/dashboard"), 600);
     } else {

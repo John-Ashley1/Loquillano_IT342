@@ -1,12 +1,12 @@
 package edu.cit.loquillano.activity1;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootApplication
-public class Activity1Application {
+@SpringBootTest
+class Activity1ApplicationTests {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Activity1Application.class, args);
-	}
+    @Test
+    void contextLoads() {
+    }
 }

@@ -1,23 +1,24 @@
-const SESSION_KEY = "activity1_session_user";
+const TOKEN_KEY = "activity1_token";
+const USERNAME_KEY = "activity1_username";
 
-export function saveSession(user) {
-  const { password, ...safeUser } = user || {};
-
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(safeUser));
+export function saveSession(token, username) {
+  sessionStorage.setItem(TOKEN_KEY, token);
+  sessionStorage.setItem(USERNAME_KEY, username);
 }
 
-export function getSession() {
-  const raw = sessionStorage.getItem(SESSION_KEY);
+export function getToken() {
+  return sessionStorage.getItem(TOKEN_KEY);
+}
 
-  if (!raw) return null;
+export function getUsername() {
+  return sessionStorage.getItem(USERNAME_KEY);
+}
 
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
+export function isAuthenticated() {
+  return !!getToken();
 }
 
 export function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(USERNAME_KEY);
 }
